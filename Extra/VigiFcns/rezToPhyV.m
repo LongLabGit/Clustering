@@ -122,3 +122,12 @@ if ~isempty(savePath)
     fclose(fid);
 end
 disp('done writing to phy')
+%%
+figure(1);clf;
+tS=rez.st3(:,1)/ops.fs/60;
+[n,edges]=histcounts(tS,0:1:max(tS));
+n=n/length(unique(rez.st3(:,2)))/60;
+plot(edges(2:end-2),n(2:end-1));
+axis tight;
+xlabel('minutes')
+ylabel('mean FR (Hz)')

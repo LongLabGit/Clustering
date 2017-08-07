@@ -5,7 +5,7 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 % a savePath it should be a folder, and you will need to have npy-matlab
 % available (https://github.com/kwikteam/npy-matlab)
 %
-save(fullfile(rez.ops.root,'batches/KS_output.mat'),'rez','ops');
+rez.ops.chanMapName = ops.chanMap;
 [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
 savePath=fullfile(rez.ops.root,'batches');
 % spikeTimes will be in samples, not seconds
@@ -131,3 +131,4 @@ plot(edges(2:end-2),n(2:end-1));
 axis tight;
 xlabel('minutes')
 ylabel('mean FR (Hz)')
+save(fullfile(rez.ops.root,'batches/KS_output.mat'),'rez','ops');

@@ -1,7 +1,7 @@
 %Some Probe Stuff. Do not change
 edit(id);%open it for you so that you can make sure you are using the correct one
 cd ../../
-ops.root='S:/Margot/Sleep/SiProbe/MEH1_rec170804/baseline/';
+ops.root='D:/Margot/';
 ops.fbinary=[ops.root,'amplifier.dat'];
 ops.fproc=[ops.root,'temp_wh.dat'];
 ops.datatype            = 'dat';  % binary ('dat', 'bin') or 'openEphys'
@@ -22,7 +22,7 @@ ops.criterionNoiseChannels= .2; %
 ops.Th               = [4 15 15];    % threshold for detecting spikes on template-filtered data ([6 12 12]) 
 %It's simply a threshold on the convolution of the template (mean cell waveform) with the raw signal.
 %MARIUS ops.Th               = [2 12 12] ; %[4 12 12];    % threshold for detecting spikes on template-filtered data ([6 12 12])
-ops.lam              = [10 40 40];   % large means amplitudes are forced around the mean ([10 30 30])
+ops.lam              = [10 30 30];   % large means amplitudes are forced around the mean ([10 30 30])
 %a trade-off between the mean squared error of the raw data reconstruction term  and the squared 
 %error between the amplitude of the spike and the mean amplitude for that template. For example, 
 %when lam  = Inf, spikes from the same template always have the same amplitude. When lam is set to 

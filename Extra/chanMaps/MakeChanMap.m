@@ -97,4 +97,4 @@ kcoords=[ones(1,32),2*ones(1,32)];
 AnatGroup{1}=0:31;
 AnatGroup{2}=32:63;
 clear x y
-save 64H.mat 
+save 64H.mat  

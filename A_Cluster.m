@@ -8,10 +8,8 @@ gpuDevice(1);
 id='MargotRA.m';run(fullfile('Extra/configFiles/',id));
 [rez, DATA, uproj] = preprocessData(ops);
 rez=fitTemplates(rez, DATA, uproj); 
+save('D:\Margot\rez.mat','rez');
+%%
 rez=fullMPMU(rez,DATA);
-% rez = merge_posthoc2(rez);%would be nice, but screws up clustering later.
-% maybe do this for baseline testing??
+% rez = merge_posthoc2(rez);%would be nice, but screws up clustering later. do for baseline
 rezToPhyV(rez,ops);
-%% Send output to phy
-% system(['activate phy & cd ' fullfile(ops.root,'batches') ' & phy template-gui params.py'])
-% ['activate phy & cd ' fullfile(ops.root,'batches') ' & phy template-gui params.py']

@@ -131,4 +131,10 @@ plot(edges(2:end-2),n(2:end-1));
 axis tight;
 xlabel('minutes')
 ylabel('mean FR (Hz)')
-save(fullfile(rez.ops.root,'batches/KS_output.mat'),'rez','ops');
+%%
+s=whos('rez');
+if (s.bytes/1e9)<2
+    save(fullfile(rez.ops.root,'batches/KS_output.mat'),'rez','ops');
+else
+    save(fullfile(rez.ops.root,'batches/KS_output.mat'),'rez','ops','-v7.3');
+end

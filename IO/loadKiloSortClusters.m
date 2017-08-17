@@ -4,7 +4,7 @@ function clusters = loadKiloSortClusters(SiProbePath, SiProbeSamplingInterval)
 try
     load(fullfile(SiProbePath,'batches\KS_Output.mat'));
     clust_id=readNPY(fullfile(SiProbePath,'batches\spike_clusters.npy'));
-    clust_group=importdata(fullfile(SiProbePath,'batches\cluster_group.tsv'));
+    clust_group=importdata(fullfile(SiProbePath,'batches\cluster_group.csv'));
 catch
     load(fullfile(SiProbePath,'KS_Output.mat'));
     clust_id=readNPY(fullfile(SiProbePath,'spike_clusters.npy'));

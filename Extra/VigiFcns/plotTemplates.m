@@ -1,8 +1,9 @@
 % ch = channel number
 close all;
+numClust = size(rez.dWU,3);
 xS=.2;
 yS=15;
-for k = 138
+for k = 1:numClust
     figure(1);clf;hold on;
     wa = rez.dWU(:,:,k)';
     wa = 100 * wa;
@@ -22,9 +23,10 @@ for k = 138
     title(num2str(k))
     good(k)=input('keep?');
 end 
-
+%%
  for k = 1:length(good)
-     if good == 0
-         rez.dWU(:,:,k) = 0;
+     if good(k) == 0
+         disp('die you stupid doublet')
+         rezGood.dWU(:,:,k) = 0;
      end
  end

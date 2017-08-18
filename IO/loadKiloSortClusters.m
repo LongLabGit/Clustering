@@ -34,7 +34,7 @@ for i = 1:length(goodClusters)
     meanWaveform = mean(rez.Wraw(:,:,origC),3);    
     [~,KS_channel] = max(mean(abs(meanWaveform),2));
     
-    clusters(i).spikeTimes = clusterSpikeTimes;
+    clusters(i).spikeTimes = unique(clusterSpikeTimes);
     clusters(i).clusterID = clusterOfInterest;
     clusters(i).maxChannel = KS_channel - 1;
     clusters(i).coordinates = [xcoords(KS_channel) ycoords(KS_channel)];

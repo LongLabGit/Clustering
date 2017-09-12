@@ -101,9 +101,3 @@ end
 fprintf('\nTime %3.2f. Mean waveforms computed... \n', toc);
 Wraw=Wraw*.195*ops.scaleproc;%convert to uV
 s=[s_t,s];
-
-
-
-
-
-

@@ -11,6 +11,19 @@ ycoords=eLoc(chanMap,2);
 kcoords=repmat([1:8]',1,8)';
 kcoords=kcoords(:)';
 save ChanMapBird.mat nChannels chanMap chanMap0ind connected xcoords ycoords kcoords AnatGroup
+%% Tetrode
+reboot;
+nChannels=16;
+chanMap=1:16;
+chanMap0ind=chanMap-1;
+connected=true(16,1);
+connected(8)=0;
+% this way we dont need to make a new one each time we have a 
+xcoords=1:16;
+ycoords=zeros(1,16);
+% kcoords=ones(1,16); 
+kcoords=1:16;
+save tetrode.mat nChannels chanMap chanMap0ind connected xcoords ycoords kcoords 
 %% Bird,  Broken Shank
 reboot;
 load ../../../../SiProbe/Probe/AnatGroup.mat

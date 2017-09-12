@@ -1,4 +1,13 @@
 function [meanWF, allWF] = readWaveformsFromDat(datFilename, chansInDat, takeChans,sampleTimes, window, nToRead)
+% INPUT
+%       datFilename: location of dat file (e.g. C:\Margot\amplifer.dat)
+%       chansInDat: # of chanbnels (e.g. 64)
+%       takeChans,channels to look at (e.g. [3,4])
+%       sampleTimes, times (in samples, not seconds) of spikes
+%       window, : width of spike that you want in saples (e.g. [-16,16] would be 33 samples)
+%       nToRead: # of spikes. so your cluster in sampletimes might have
+%       10,00 spikes, but you only want 100, it selects them randomly 
+% OUTPUT
 
 FileInf = dir(datFilename);
 nSampsInDat = (FileInf.bytes/chansInDat/2);

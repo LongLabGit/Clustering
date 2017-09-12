@@ -1,33 +1,33 @@
-%Some Probe Stuff. Do not change
 edit(id);%open it for you so that you can make sure you are using the correct one
 cd ../../
-ops.root='S:/Margot/Sleep/SiProbe/H5_dualRA_170831/ephy/H5_dualRA_170831_cat/';
+ops.root='S:/Vigi/Datasets/DBS/Data/StatisticalLearning/380/dat/';
 ops.fbinary=[ops.root,'amplifier.dat'];
 ops.fproc=[ops.root,'temp_wh.dat'];
 ops.datatype            = 'dat';  % binary ('dat', 'bin') or 'openEphys'
-ops.NchanTOT            = 128;    % total number of channels
-ops.fs                  = 20000; % sampling rate
-ops.chanMap =  'Extra/chanMaps/64H_dualLR.mat';
+ops.NchanTOT            = 3;   % total number of channels
+ops.fs                  = 24000; % sampling rate
+ops.chanMap = 'S:\Vigi\Matlab\Clustering\Extra\chanMaps\DBS.mat';
 load(ops.chanMap,'connected')
 ops.Nchan               = sum(connected>1e-6); % number of active channels 
 
+
 %Some Settings to play with 
-ops.Nfilt               = 576; %  number of filters to use (512, should be a multiple of 32)
+ops.Nfilt               = 32; %  number of filters to use (512, should be a multiple of 32)
 ops.criterionNoiseChannels= .2; %
-ops.nt0=33;
+ops.nt0=39;
 % these options can improve/deteriorate results. when multiple values are @
 % provided for an option, the first two are beginning and ending anneal values, 
 % the third is the value used in the final pass. 
 %The three values correspond to 1) start of optimization 2) end of optimization 3) final template matching and subtraction step.
-ops.Th               = [4 12 12];    % threshold for detecting spikes on template-filtered data ([6 12 12]) 
 %It's simply a threshold on the convolution of the template (mean cell waveform) with the raw signal.
-%MARIUS ops.Th               = [2 12 12] ; %[4 12 12];    % threshold for detecting spikes on template-filtered data ([6 12 12])
-ops.lam              = [10 40 40];   % large means amplitudes are forced around the mean ([10 30 30])
+% MARIUS ops.Th               = [2 12 12] ; %[4 12 12];    % threshold for detecting spikes on template-filtered data ([6 12 12])
+ops.Th               = [6 10 10];    % threshold for detecting spikes on template-filtered data ([6 12 12]) 
 %a trade-off between the mean squared error of the raw data reconstruction term  and the squared 
 %error between the amplitude of the spike and the mean amplitude for that template. For example, 
 %when lam  = Inf, spikes from the same template always have the same amplitude. When lam is set to 
 %0, the amplitude from the same template can be anything (but the spatiotemporal shape has to be consistent). 
 %MARIUS ops.lam              = [1 5 5];   % large means amplitudes are forced around the mean ([10 30 30])
+ops.lam = [6 20 20];    % threshold for detecting spikes on template-filtered data ([6 12 12]) 
 
 ops.GPU                 = 1; % whether to run this code on an Nvidia GPU (much faster, mexGPUall first)
 ops.parfor              = 1; % whether to use parfor to accelerate some parts of the algorithm
@@ -47,15 +47,16 @@ ops.splitT           = .1;           % lower threshold for splitting (.1). tries
 
 ops.maxFR               = 20000;  % maximum number of spikes to extract per batch (20000) %INCREASE THIS
 ops.fshigh              = 300;   % frequency for high pass filtering
+ops.fslow               = Inf;   % frequency for low pass filtering
 ops.ntbuff              = 64;    % samples of symmetrical buffer for whitening and spike detection
 ops.scaleproc           = 200;   % int16 scaling of whitened data keep this at 200. otherwise gets a lot of zeros
-ops.NT                  = 128*1024+ ops.ntbuff;% this is the batch size, very important for memory reasons. 
+ops.NT                  = 32*1024+ ops.ntbuff;% this is the batch size, very important for memory reasons. 
 % should be multiple of 32 (or higher power of 2) + ntbuff
 
 
 
-ops.nNeighPC    = 32; %12; % number of channnels to mask the PCs, leave empty to skip (12)
-ops.nNeigh      = 32; % number of neighboring templates to retain projections of (16)
+ops.nNeighPC    = 3; %12; % number of channnels to mask the PCs, leave empty to skip (12)
+ops.nNeigh      = 3; % number of neighboring templates to retain projections of (16)
 
 % Spike Templates
 ops.initialize = 'no'; %'fromData' or 'no'. If no, puts a filter on each channel,. if yes, biases towards electrodes with more spikes
@@ -75,14 +76,12 @@ ops.epu     = Inf;
 
 ops.whitening           = 'full'; % dont change this! type of whitening (default 'full', for 'noSpikes' set options for spike detection below)
 ops.nSkipCov       = 1; % compute whitening matrix from every N-th batch
-ops.whiteningRange = 16; % how many channels to whiten together (Inf for whole probe whitening, should be fine if Nchan<=32)
+ops.whiteningRange = 10; % how many channels to whiten together (Inf for whole probe whitening, should be fine if Nchan<=32)
 
-ops.ForceMaxRAMforDat   = 15e9; %20e9;  % maximum RAM the algorithm will try to use
+ops.ForceMaxRAMforDat   = 20e9; %20e9;  % maximum RAM the algorithm will try to use
 
 batch_path = fullfile(ops.root, 'batches');
-if ~exist(ops.root, 'dir')
-    error('Wrong folder you shmuck')
-elseif ~exist(batch_path, 'dir')
+if ~exist(batch_path, 'dir')
     mkdir(batch_path);
 end
-clear dd connected batch_path id;
+clear dd connected batch_path;

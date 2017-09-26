@@ -15,7 +15,7 @@ if exist(Ffil,'file')
     FileInf = dir(Ffil);
     nSampsInDat = (FileInf.bytes/nChan/2);
     rawData = memmapfile(Ffil, 'Format', {'int16', [nChan, nSampsInDat], 'x'});
-    for ci=1:length(c)
+    parfor ci=1:length(c)
         Template = rez.Wraw(:,:,c(ci));
         [~,maxChan] = max(mean(abs(Template),2));
         inds{ci}=clusters==c(ci);
@@ -28,7 +28,7 @@ else
     rawData = memmapfile(Fdat, 'Format', {'int16', [nChan, nSampsInDat], 'x'});
     lenSpike=size(rez.dWU,1);%length of a spike
     indR=(1:lenSpike)-round(lenSpike/3);
-    for ci=1:length(c)
+    parfor ci=1:length(c)
         Template = rez.Wraw(:,:,c(ci));
         [~,maxChan] = max(mean(abs(Template),2));
         inds{ci}=find(clusters==c(ci));

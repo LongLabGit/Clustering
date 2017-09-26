@@ -7,15 +7,17 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 %
 rez.ops.chanMapName = ops.chanMap;
 [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
-savePath=fullfile(rez.ops.root,'batches');
+savePath=fullfile(rez.ops.root);
 % spikeTimes will be in samples, not seconds
-%check for doubled spike times
-for i=unique(rez.st3(:,2))'
-    inds=rez.st3(:,2)==i;
-    doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
-end
-if sum(doubled>10)
-    doubled(logical(doubled))
+
+if 0%check for doubled spike times, this is ugly and old
+    for i=unique(rez.st3(:,2))'
+        inds=rez.st3(:,2)==i;
+        doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
+    end
+    if sum(doubled>10)
+        doubled(logical(doubled))
+    end
 end
 
 %If you already ran phy on your data, it will have a bad config file.
@@ -45,12 +47,13 @@ if size(rez.st3,2)>4
     spikeClusters = uint32(1+rez.st3(:,5));
 end
 amplitudes = rez.st3(:,3);
-
+mV=getmV(rez);
 Nchan = rez.ops.Nchan;
 
 connected   = rez.connected(:);
 xcoords     = rez.xcoords(:);
 ycoords     = rez.ycoords(:);
+kcoords     = rez.ops.kcoords(:);
 chanMap     = rez.ops.chanMap(:);
 chanMap0ind = chanMap - 1;
 
@@ -80,6 +83,8 @@ if ~isempty(savePath)
         writeNPY(uint32(spikeTemplates-1), fullfile(savePath, 'spike_clusters.npy')); % -1 for zero indexing
     end
     writeNPY(amplitudes, fullfile(savePath, 'amplitudes.npy'));
+    writeNPY(mV, fullfile(savePath, 'amplitudes_mV.npy'));
+
     writeNPY(templates, fullfile(savePath, 'templates.npy'));
     writeNPY(templatesInds, fullfile(savePath, 'templates_ind.npy'));
     

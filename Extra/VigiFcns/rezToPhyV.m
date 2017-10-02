@@ -93,7 +93,7 @@ if ~isempty(savePath)
     chanMap0ind = int32(chanMap0ind);
     
     writeNPY(chanMap0ind(conn), fullfile(savePath, 'channel_map.npy'));
-    writeNPY(int16(kcoords(conn)), fullfile(savePath, 'channel_shank_map.npy'));
+    writeNPY(int16(kcoords), fullfile(savePath, 'channel_shank_map.npy'));
     %writeNPY(connected, fullfile(savePath, 'connected.npy'));
 %     writeNPY(Fs, fullfile(savePath, 'Fs.npy'));
     writeNPY([xcoords(conn) ycoords(conn)], fullfile(savePath, 'channel_positions.npy'));

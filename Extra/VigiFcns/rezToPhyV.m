@@ -5,20 +5,33 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 % a savePath it should be a folder, and you will need to have npy-matlab
 % available (https://github.com/kwikteam/npy-matlab)
 %
-rez.ops.chanMapName = ops.chanMap;
+
+%first some summary stuff
 [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
+figure(1);clf;
+tS=rez.st3(:,1)/ops.fs/60;
+[n,edges]=histcounts(tS,linspace(0,max(tS),100));
+dT=diff(edges(1:2));
+n=n/length(unique(rez.st3(:,2)))/60/dT;
+plot(edges(2:end-2),n(2:end-1));
+axis tight;
+xlabel('minutes')
+ylabel('mean FR (Hz)')
+doubled=nan(length(unique(rez.st3(:,2))'),1);
+for i=unique(rez.st3(:,2))'
+    inds=rez.st3(:,2)==i;
+    doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
+end
+if sum(doubled>10)>(.2*i)
+    disp(doubled(logical(doubled)))
+end
+%
+
+
+rez.ops.chanMapName = ops.chanMap;
 savePath=fullfile(rez.ops.root);
 % spikeTimes will be in samples, not seconds
 
-if 0%check for doubled spike times, this is ugly and old
-    for i=unique(rez.st3(:,2))'
-        inds=rez.st3(:,2)==i;
-        doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
-    end
-    if sum(doubled>10)
-        doubled(logical(doubled))
-    end
-end
 
 %If you already ran phy on your data, it will have a bad config file.
 %delete it. 
@@ -27,6 +40,10 @@ for i = 1:length(fs)
    delete(fullfile(savePath, fs(i).name)); 
 end
 fs = dir(fullfile(savePath, '*.csv'));
+if ~isempty(fs)
+    delete(fullfile(savePath, fs.name)); 
+end
+fs = dir(fullfile(savePath, '*.tsv'));
 if ~isempty(fs)
     delete(fullfile(savePath, fs.name)); 
 end
@@ -128,16 +145,6 @@ if ~isempty(savePath)
     fclose(fid);
 end
 disp('done writing to phy')
-%%
-figure(1);clf;
-tS=rez.st3(:,1)/ops.fs/60;
-[n,edges]=histcounts(tS,linspace(0,max(tS),100));
-dT=diff(edges(1:2));
-n=n/length(unique(rez.st3(:,2)))/60/dT;
-plot(edges(2:end-2),n(2:end-1));
-axis tight;
-xlabel('minutes')
-ylabel('mean FR (Hz)')
 %%
 s=whos('rez');
 if (s.bytes/1e9)<2

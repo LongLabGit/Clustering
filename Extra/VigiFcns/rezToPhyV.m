@@ -64,7 +64,7 @@ if size(rez.st3,2)>4
     spikeClusters = uint32(1+rez.st3(:,5));
 end
 amplitudes = rez.st3(:,3);
-mV=getmV(rez);
+% mV=getmV(rez);
 Nchan = rez.ops.Nchan;
 
 connected   = rez.connected(:);
@@ -100,7 +100,7 @@ if ~isempty(savePath)
         writeNPY(uint32(spikeTemplates-1), fullfile(savePath, 'spike_clusters.npy')); % -1 for zero indexing
     end
     writeNPY(amplitudes, fullfile(savePath, 'amplitudes.npy'));
-    writeNPY(mV, fullfile(savePath, 'amplitudes_mV.npy'));
+%     writeNPY(mV, fullfile(savePath, 'amplitudes_mV.npy'));
 
     writeNPY(templates, fullfile(savePath, 'templates.npy'));
     writeNPY(templatesInds, fullfile(savePath, 'templates_ind.npy'));
@@ -152,3 +152,4 @@ if (s.bytes/1e9)<2
 else
     save(fullfile(rez.ops.root,'KS_output.mat'),'rez','ops','-v7.3');
 end
+disp('done saving to matlab')

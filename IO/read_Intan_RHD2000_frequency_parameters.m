@@ -1,4 +1,4 @@
-function [frequency_parameters] = read_Intan_RHD2000_frequency_parameters(filename)
+function frequency_parameters = read_Intan_RHD2000_frequency_parameters(filename)
 
 % read_Intan_RHD2000_file
 %

@@ -52,7 +52,7 @@ for i = 1:length(keptClusters)
     origC = unique(rez.st3(spikeI,2));
     meanTemplate = mean(rez.Wraw(:,:,origC),3);    
     [~,KS_channel] = max(mean(abs(meanTemplate ),2));
-    clusters(i).group=clustGroup(keptClusters(i));
+    clusters(i).group=clustGroup{keptClusters(i)};
     clusters(i).clustID=clustName(keptClusters(i));
     clusters(i).spikeTimes = unique(spikeT);%THROW A UNIQUE ON IT!!! kilosort will sometoimes double assign times
     clusters(i).maxChannel = chanMap(KS_channel) - 1;
@@ -66,5 +66,11 @@ xlabel('FR (Hz)')
 ylabel('# of neurons')
 title('Distribution of Firing Rates')
 for i=1:length(keep)
-    disp(['# of ' keep{i} ': ' num2str(sum(strcmp([clusters.group],keep{i})))])
+    disp(['# of ' keep{i} ': ' num2str(sum(strcmp({clusters.group},keep{i})))])
+    type(strcmp({clusters.group},keep{i}))=i;
 end
+figure(2)
+histogram(type)
+set(gca,'xtick',1:i)
+set(gca,'xticklabel',keep)
+ylabel('# of neurons')

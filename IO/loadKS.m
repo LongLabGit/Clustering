@@ -1,4 +1,4 @@
-function clusters = loadKS(folder,version,keep,fs)
+function [clusters,probe]= loadKS(folder,version,keep,fs)
 % Input
 %       folder: location of your data
 %       version: dev or release. This will tell the program where to look
@@ -34,7 +34,21 @@ xcoords=xcoords(connected);
 ycoords=ycoords(connected);
 kcoords=kcoords(connected);
 chanMap=chanMap(connected);
-
+%Store meta info
+probe.xcoords=xcoords;
+probe.ycoords=ycoords;
+probe.kcoords=kcoords;
+probe.chanMap=chanMap;
+probe.dat_file=ops.fbinary;
+probe.fs=ops.fs;
+probe.nchan=ops.NchanTOT;
+if isfield(ops,'nt0')
+    probe.nt0=ops.nt0;%number of samples to take for waveform analysis
+else
+    probe.nt0=ceil(probe.fs*.0025);%2.5 ms
+end
+    
+%
 clustGroup=cell(length(clust_group) - 1, 1);
 clustName=nan(length(clust_group) - 1, 1);
 for i = 1:length(clust_group) - 1
@@ -60,17 +74,3 @@ for i = 1:length(keptClusters)
     clusters(i).shank=kcoords(KS_channel);
     clusters(i).FR=sum(spikeI)/range(spikeT);
 end
-figure(1);clf;
-histogram([clusters.FR])
-xlabel('FR (Hz)')
-ylabel('# of neurons')
-title('Distribution of Firing Rates')
-for i=1:length(keep)
-    disp(['# of ' keep{i} ': ' num2str(sum(strcmp({clusters.group},keep{i})))])
-    type(strcmp({clusters.group},keep{i}))=i;
-end
-figure(2)
-histogram(type)
-set(gca,'xtick',1:i)
-set(gca,'xticklabel',keep)
-ylabel('# of neurons')

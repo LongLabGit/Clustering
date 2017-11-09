@@ -29,7 +29,11 @@ if isempty(fs)
 end
     
 %Get Channel Map
-load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+try
+    load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+catch
+    load(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+end
 xcoords=xcoords(connected);
 ycoords=ycoords(connected);
 kcoords=kcoords(connected);

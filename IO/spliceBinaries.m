@@ -29,7 +29,7 @@ if ~isempty(ampFile)
         stop = times(t,2);
         indCut=0;
         right = start;
-        fprintf(['Starting Amp Chunk #' num2str(t) '/' num2str(size(t,1)) ': '])
+        fprintf(['Starting Amp Time Segment #' num2str(t) '/' num2str(size(t,1)) ': '])
         while right < stop
             left = start+indCut*maxPiece;
             right = min(stop,left+maxPiece);

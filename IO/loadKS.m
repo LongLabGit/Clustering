@@ -11,7 +11,7 @@ function clusters = loadKS(folder,version,keep,fs, plotSummary)
 
 % Output: clusters: a struct with all the information you need
 
-clusters=struct('clustID',[],'group',{},'spikeTimes',[],'shank',[],'maxChannel',[],'coordinates',[],'FR',[]);
+clusters=struct('clusterID',[],'group',{},'spikeTimes',[],'shank',[],'maxChannel',[],'coordinates',[],'FR',[]);
 if nargin < 5
     plotSummary = 0;
 end
@@ -36,11 +36,7 @@ if isempty(fs)
 end
     
 %Get Channel Map
-try
-    load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
-catch
-    load(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
-end
+load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
 xcoords=xcoords(connected);
 ycoords=ycoords(connected);
 kcoords=kcoords(connected);
@@ -55,7 +51,7 @@ for i = 1:length(clust_group) - 1
 end
 
 keptClusters= find(ismember(clustGroup,keep));%only take good
-clusters(length(keptClusters)).clustID=[];%inialize it so that it goes faster
+clusters(length(keptClusters)).clusterID=[];%inialize it so that it goes faster
 for i = 1:length(keptClusters)
     spikeI= spike_clust==clustName(keptClusters(i));%get indices of spike times
     spikeT = rez.st3(spikeI,1)/fs;
@@ -64,7 +60,7 @@ for i = 1:length(keptClusters)
     meanTemplate = mean(rez.Wraw(:,:,origC),3);    
     [~,KS_channel] = max(mean(abs(meanTemplate ),2));
     clusters(i).group=clustGroup{keptClusters(i)};
-    clusters(i).clustID=clustName(keptClusters(i));
+    clusters(i).clusterID=clustName(keptClusters(i));
     clusters(i).spikeTimes = unique(spikeT);%THROW A UNIQUE ON IT!!! kilosort will sometoimes double assign times
     clusters(i).maxChannel = chanMap(KS_channel) - 1;
     clusters(i).coordinates = [xcoords(KS_channel) ycoords(KS_channel)];

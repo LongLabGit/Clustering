@@ -17,14 +17,14 @@ plot(edges(2:end-2),n(2:end-1));
 axis tight;
 xlabel('minutes')
 ylabel('mean FR (Hz)')
-doubled=nan(length(unique(rez.st3(:,2))'),1);
-for i=unique(rez.st3(:,2))'
-    inds=rez.st3(:,2)==i;
-    doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
-end
-if sum(doubled>10)>(.2*i)
-    disp(doubled(logical(doubled)))
-end
+% doubled=nan(length(unique(rez.st3(:,2))'),1);
+% for i=unique(rez.st3(:,2))'
+%     inds=rez.st3(:,2)==i;
+%     doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
+% end
+% if sum(doubled>10)>(.2*i)
+%     disp(doubled(logical(doubled)))
+% end
 %
 
 

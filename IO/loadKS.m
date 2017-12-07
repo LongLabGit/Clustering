@@ -36,8 +36,8 @@ elseif exist(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'file')
 elseif exist([folder ops.chanMap],'file')
     load([folder ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
 else
-    filename = uigetfile('*.mat','Please Give me a Channel Map');
-    load(filename,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+    [filename,pathname,~] = uigetfile('*.mat','Please Give me a Channel Map');
+    load([pathname,filename],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
 end
 xcoords=xcoords(connected);
 ycoords=ycoords(connected);

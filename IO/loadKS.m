@@ -29,10 +29,15 @@ if isempty(fs)
 end
     
 %Get Channel Map
-try
+if exist(ops.chanMap,'file')
     load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
-catch
+elseif exist(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'file')
     load(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+elseif exist([folder ops.chanMap],'file')
+    load([folder ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+else
+    filename = uigetfile('*.mat','Please Give me a Channel Map');
+    load(filename,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
 end
 xcoords=xcoords(connected);
 ycoords=ycoords(connected);

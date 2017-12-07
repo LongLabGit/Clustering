@@ -1,4 +1,4 @@
-function audio=generateAudio(F,chan,write)
+function audio=generateAudio(F,chan,write,test)
 [fs,~,nA,~]=read_Intan_RHD2000_V([F,'info.rhd'],0);
 fileinfo = dir([F,'analogin.dat']);
 num_samples = fileinfo.bytes/2; % uint16 = 2 bytes
@@ -12,4 +12,13 @@ audio=filtfilt(b,1,v);
 audio=audio/max(audio);
 if write
     audiowrite([F,'audio.wav'],audio,fs)
+end
+if test
+  for s=1%:size(tPlayback,1)
+        figure(s);clf;hold on;
+        for t=1:size(tPlayback,1)
+            inds=round(tPlayback(t,s)+(0:(lenStim*2e4)));%make lenStim actuall match the stimuli
+            plot((1:length(inds))/2e4 ,audio(inds)+t)
+        end
+  end
 end

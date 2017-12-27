@@ -1,4 +1,4 @@
-function [clusters,probe]= loadKS(folder,version,keep,fs)
+function [clusters,probe]= loadKS(folder,version,keep,fs,chanMapOVR)
 % Input
 %       folder: location of your data
 %       version: dev or release. This will tell the program where to look
@@ -29,7 +29,9 @@ if isempty(fs)
 end
     
 %Get Channel Map
-if exist(ops.chanMap,'file')
+if ~isempty(chanMapOVR)
+    load(chanMapOVR,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+elseif exist(ops.chanMap,'file')
     load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
 elseif exist(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'file')
     load(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');

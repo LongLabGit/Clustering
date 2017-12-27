@@ -1,5 +1,3 @@
-
-
 function [clusterIDs, unitQuality, contaminationRate] = maskedClusterQualitySparse(clu, fet, fetInds, fetNchans)
 % - clu is 1 x nSpikes
 % - fet is nSpikes x nPCsPerChan x nInclChans

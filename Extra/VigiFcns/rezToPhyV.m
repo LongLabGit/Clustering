@@ -5,7 +5,7 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 % a savePath it should be a folder, and you will need to have npy-matlab
 % available (https://github.com/kwikteam/npy-matlab)
 %
-
+seeAllShanks=1;
 %first some summary stuff
 [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
 figure(1);clf;
@@ -110,7 +110,12 @@ if ~isempty(savePath)
     chanMap0ind = int32(chanMap0ind);
     
     writeNPY(chanMap0ind(conn), fullfile(savePath, 'channel_map.npy'));
-    writeNPY(int16(kcoords), fullfile(savePath, 'channel_shank_map.npy'));
+    if seeAllShanks
+        disp('OVERWRITING KCOORDS')
+        writeNPY(int16(ones(size(kcoords))), fullfile(savePath, 'channel_shank_map.npy'));
+    else
+        writeNPY(int16(kcoords), fullfile(savePath, 'channel_shank_map.npy'));
+    end
     %writeNPY(connected, fullfile(savePath, 'connected.npy'));
 %     writeNPY(Fs, fullfile(savePath, 'Fs.npy'));
     writeNPY([xcoords(conn) ycoords(conn)], fullfile(savePath, 'channel_positions.npy'));

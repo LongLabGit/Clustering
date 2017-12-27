@@ -1,4 +1,4 @@
-function [fs,nC,nA,total_seconds]=read_Intan_RHD2000_V(filename,loadAll,amp)
+function [fs,nC,nA,total_seconds]=read_Intan_RHD2000_V(filename,loadAll)
 % VIGIS EDIT
 %if you do load all it will be the standard
 % else, it iwll retrun stuff

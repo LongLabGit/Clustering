@@ -5,7 +5,7 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 % a savePath it should be a folder, and you will need to have npy-matlab
 % available (https://github.com/kwikteam/npy-matlab)
 %
-seeAllShanks=1;
+seeAllShanks=0;
 %first some summary stuff
 [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
 figure(1);clf;

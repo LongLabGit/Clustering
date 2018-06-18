@@ -23,7 +23,9 @@ if strcmp(version,'release')
 elseif strcmp(version,'dev')
     load(fullfile(folder,'KS_Output.mat'));
     spike_clust=readNPY(fullfile(folder,'spike_clusters.npy'));
-    clust_group=importdata(fullfile(folder,'cluster_group.tsv'));
+    if ~any(strcmp(keep,'unsorted'))
+        clust_group=importdata(fullfile(folder,'cluster_group.tsv'));
+    end
 end
 % get intan data
 if isempty(fs)
@@ -42,12 +44,20 @@ ycoords=ycoords(connected);
 kcoords=kcoords(connected);
 chanMap=chanMap(connected);
 
-clustGroup=cell(length(clust_group) - 1, 1);
-clustName=nan(length(clust_group) - 1, 1);
-for i = 1:length(clust_group) - 1
-    line = textscan(clust_group{i+1},'%d %s');
-    clustGroup(i) = line{2};%label assigned to the cluster
-    clustName(i) = line{1};%cluster id 
+if strcmp(version,'dev') && strcmp(keep,'unsorted')
+    clustName = unique(spike_clust);
+    clustGroup = cell(length(clustName), 1);
+    for i = 1:length(clustName)
+        clustGroup{i} = 'unsorted';
+    end
+else
+    clustGroup=cell(length(clust_group) - 1, 1);
+    clustName=nan(length(clust_group) - 1, 1);
+    for i = 1:length(clust_group) - 1
+        line = textscan(clust_group{i+1},'%d %s');
+        clustGroup(i) = line{2};%label assigned to the cluster
+        clustName(i) = line{1};%cluster id 
+    end
 end
 
 keptClusters= find(ismember(clustGroup,keep));%only take good
@@ -66,6 +76,7 @@ for i = 1:length(keptClusters)
     clusters(i).coordinates = [xcoords(KS_channel) ycoords(KS_channel)];
     clusters(i).shank=kcoords(KS_channel);
     clusters(i).FR=sum(spikeI)/range(spikeT);
+    clusters(i).originalCluster = origC;
 end
 
 if plotSummary

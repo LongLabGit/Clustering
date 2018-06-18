@@ -94,4 +94,6 @@ fprintf(1, 'Header file contains no data.  Amplifiers were sampled at %0.2f kS/s
     sample_rate / 1000);
 fprintf(1, '\n');
 
+fclose(fid);
+
 end

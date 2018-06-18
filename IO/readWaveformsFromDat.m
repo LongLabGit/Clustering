@@ -27,11 +27,24 @@ end
 theseTimes = theseTimes(theseTimes>-window(1) & theseTimes<nSampsInDat-window(2)-1);
 nToRead = numel(theseTimes);
 
+if nToRead == diff(window)+1
+    nToRead = nToRead - 1;
+end
 allWF = zeros(length(takeChans), diff(window)+1, nToRead);
 
 for i=1:nToRead
     allWF(:,:,i) = double(rawData.Data.x(takeChans,theseTimes(i)+window(1):theseTimes(i)+window(2)))*.195;
 end
 allWF=squeeze(allWF);
-meanWF = median(allWF,length(size(allWF)));
+allWFShape = size(allWF);
+if allWFShape(1) == nToRead
+    direction = 1;
+elseif allWFShape(2) == nToRead
+    direction = 2;
+end
+% meanWF = median(allWF,length(size(allWF)));
+meanWF = median(allWF,direction);
+if direction == 1
+    meanWF = meanWF';
+end
 

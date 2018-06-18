@@ -6,26 +6,26 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 % available (https://github.com/kwikteam/npy-matlab)
 %
 
-%first some summary stuff
-[length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
-figure(1);clf;
-tS=rez.st3(:,1)/ops.fs/60;
-[n,edges]=histcounts(tS,linspace(0,max(tS),100));
-dT=diff(edges(1:2));
-n=n/length(unique(rez.st3(:,2)))/60/dT;
-plot(edges(2:end-2),n(2:end-1));
-axis tight;
-xlabel('minutes')
-ylabel('mean FR (Hz)')
-% doubled=nan(length(unique(rez.st3(:,2))'),1);
-% for i=unique(rez.st3(:,2))'
-%     inds=rez.st3(:,2)==i;
-%     doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
-% end
-% if sum(doubled>10)>(.2*i)
-%     disp(doubled(logical(doubled)))
-% end
-%
+% %first some summary stuff
+% [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
+% figure(1);clf;
+% tS=rez.st3(:,1)/ops.fs/60;
+% [n,edges]=histcounts(tS,linspace(0,max(tS),100));
+% dT=diff(edges(1:2));
+% n=n/length(unique(rez.st3(:,2)))/60/dT;
+% plot(edges(2:end-2),n(2:end-1));
+% axis tight;
+% xlabel('minutes')
+% ylabel('mean FR (Hz)')
+% % doubled=nan(length(unique(rez.st3(:,2))'),1);
+% % for i=unique(rez.st3(:,2))'
+% %     inds=rez.st3(:,2)==i;
+% %     doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
+% % end
+% % if sum(doubled>10)>(.2*i)
+% %     disp(doubled(logical(doubled)))
+% % end
+% %
 
 
 rez.ops.chanMapName = ops.chanMap;

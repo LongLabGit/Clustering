@@ -6,6 +6,6 @@ function writeNeuroScopeEvents(outFileName, spikeTimes, clusterIDs)
 % cluster id is a numerical vector
 outFile = fopen(outFileName,'w');
 for i = 1:length(spikeTimes)
-    fprintf(outFile,'%.2f sf%.2f\n',[spikeTimes(i), clusterIDs(i,:)]); % in ms
+    fprintf(outFile,'%.2f sf%.2f\n',[spikeTimes(i), clusterIDs(i)]); % in ms
 end
 fclose(outFile);

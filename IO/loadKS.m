@@ -1,20 +1,13 @@
-function clusters = loadKS(folder,version,keep,fs, plotSummary)
+function [clusters,probe]= loadKS(folder,version,keep,fs,chanMapOVR)
 % Input
 %       folder: location of your data
 %       version: dev or release. This will tell the program where to look
 %       for the data
-%       keep: cell array of phy cluster types to be loaded. Options:
-%       'good', 'mua', 'noise', 'unsorted' ('unsorted' NOT in dev version)
-%       fs: sampling rate (in Hz); if empty will try to load from Intan
-%       info.rhd file
-%       plotSummary: optional, shows figure and prints summary statistics
 
 % Output: clusters: a struct with all the information you need
 
-clusters=struct('clusterID',[],'group',{},'spikeTimes',[],'shank',[],'maxChannel',[],'coordinates',[],'FR',[]);
-if nargin < 5
-    plotSummary = 0;
-end
+clusters=struct('clustID',[],'group',{},'spikeTimes',[],'shank',[],'maxChannel',[],'coordinates',[],'FR',[]);
+
 %Load in from KiloSort
 if strcmp(version,'release')
     load(fullfile(folder,'batches\KS_Output.mat'));
@@ -38,12 +31,38 @@ if isempty(fs)
 end
     
 %Get Channel Map
-load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+if ~isempty(chanMapOVR)
+    load(chanMapOVR,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+elseif exist(ops.chanMap,'file')
+    load(ops.chanMap,'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+elseif exist(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'file')
+    load(['S:\Vigi\Matlab\Clustering\' ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+elseif exist([folder ops.chanMap],'file')
+    load([folder ops.chanMap],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+else
+    [filename,pathname,~] = uigetfile('*.mat','Please Give me a Channel Map');
+    load([pathname,filename],'connected', 'xcoords', 'ycoords','kcoords','chanMap');
+end
 xcoords=xcoords(connected);
 ycoords=ycoords(connected);
 kcoords=kcoords(connected);
 chanMap=chanMap(connected);
 
+%Store meta info
+probe.xcoords=xcoords;
+probe.ycoords=ycoords;
+probe.kcoords=kcoords;
+probe.chanMap=chanMap;
+probe.dat_file=ops.fbinary;
+probe.fs=ops.fs;
+probe.nchan=ops.NchanTOT;
+if isfield(ops,'nt0')
+    probe.nt0=ops.nt0;%number of samples to take for waveform analysis
+else
+    probe.nt0=ceil(probe.fs*.0025);%2.5 ms
+end
+    
+%
 if strcmp(version,'dev') && strcmp(keep,'unsorted')
     clustName = unique(spike_clust);
     clustGroup = cell(length(clustName), 1);
@@ -61,7 +80,7 @@ else
 end
 
 keptClusters= find(ismember(clustGroup,keep));%only take good
-clusters(length(keptClusters)).clusterID=[];%inialize it so that it goes faster
+clusters(length(keptClusters)).clustID=[];%inialize it so that it goes faster
 for i = 1:length(keptClusters)
     spikeI= spike_clust==clustName(keptClusters(i));%get indices of spike times
     spikeT = rez.st3(spikeI,1)/fs;
@@ -70,28 +89,11 @@ for i = 1:length(keptClusters)
     meanTemplate = mean(rez.Wraw(:,:,origC),3);    
     [~,KS_channel] = max(mean(abs(meanTemplate ),2));
     clusters(i).group=clustGroup{keptClusters(i)};
-    clusters(i).clusterID=clustName(keptClusters(i));
+    clusters(i).clustID=clustName(keptClusters(i));
     clusters(i).spikeTimes = unique(spikeT);%THROW A UNIQUE ON IT!!! kilosort will sometoimes double assign times
     clusters(i).maxChannel = chanMap(KS_channel) - 1;
     clusters(i).coordinates = [xcoords(KS_channel) ycoords(KS_channel)];
     clusters(i).shank=kcoords(KS_channel);
     clusters(i).FR=sum(spikeI)/range(spikeT);
     clusters(i).originalCluster = origC;
-end
-
-if plotSummary
-    figure(1);clf;
-    histogram([clusters.FR])
-    xlabel('FR (Hz)')
-    ylabel('# of neurons')
-    title('Distribution of Firing Rates')
-    for i=1:length(keep)
-        disp(['# of ' keep{i} ': ' num2str(sum(strcmp({clusters.group},keep{i})))])
-        type(strcmp({clusters.group},keep{i}))=i;
-    end
-    figure(2)
-    histogram(type)
-    set(gca,'xtick',1:i)
-    set(gca,'xticklabel',keep)
-    ylabel('# of neurons')
 end

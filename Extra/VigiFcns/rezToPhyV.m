@@ -6,26 +6,27 @@ function [spikeTimes, clusterIDs, amplitudes, templates, templateFeatures, ...
 % available (https://github.com/kwikteam/npy-matlab)
 %
 
-% %first some summary stuff
-% [length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
-% figure(1);clf;
-% tS=rez.st3(:,1)/ops.fs/60;
-% [n,edges]=histcounts(tS,linspace(0,max(tS),100));
-% dT=diff(edges(1:2));
-% n=n/length(unique(rez.st3(:,2)))/60/dT;
-% plot(edges(2:end-2),n(2:end-1));
-% axis tight;
-% xlabel('minutes')
-% ylabel('mean FR (Hz)')
-% % doubled=nan(length(unique(rez.st3(:,2))'),1);
-% % for i=unique(rez.st3(:,2))'
-% %     inds=rez.st3(:,2)==i;
-% %     doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
-% % end
-% % if sum(doubled>10)>(.2*i)
-% %     disp(doubled(logical(doubled)))
-% % end
-% %
+seeAllShanks=0;
+%first some summary stuff
+[length(unique(rez.st3(:,2))),length(rez.st3(:,2))]
+figure(1);clf;
+tS=rez.st3(:,1)/ops.fs/60;
+[n,edges]=histcounts(tS,linspace(0,max(tS),100));
+dT=diff(edges(1:2));
+n=n/length(unique(rez.st3(:,2)))/60/dT;
+plot(edges(2:end-2),n(2:end-1));
+axis tight;
+xlabel('minutes')
+ylabel('mean FR (Hz)')
+% doubled=nan(length(unique(rez.st3(:,2))'),1);
+% for i=unique(rez.st3(:,2))'
+%     inds=rez.st3(:,2)==i;
+%     doubled(i)=length(rez.st3(inds,1))-length(unique(rez.st3(inds,1)));
+% end
+% if sum(doubled>10)>(.2*i)
+%     disp(doubled(logical(doubled)))
+% end
+%
 
 
 rez.ops.chanMapName = ops.chanMap;
@@ -110,7 +111,12 @@ if ~isempty(savePath)
     chanMap0ind = int32(chanMap0ind);
     
     writeNPY(chanMap0ind(conn), fullfile(savePath, 'channel_map.npy'));
-    writeNPY(int16(kcoords), fullfile(savePath, 'channel_shank_map.npy'));
+    if seeAllShanks
+        disp('OVERWRITING KCOORDS')
+        writeNPY(int16(ones(size(kcoords))), fullfile(savePath, 'channel_shank_map.npy'));
+    else
+        writeNPY(int16(kcoords), fullfile(savePath, 'channel_shank_map.npy'));
+    end
     %writeNPY(connected, fullfile(savePath, 'connected.npy'));
 %     writeNPY(Fs, fullfile(savePath, 'Fs.npy'));
     writeNPY([xcoords(conn) ycoords(conn)], fullfile(savePath, 'channel_positions.npy'));

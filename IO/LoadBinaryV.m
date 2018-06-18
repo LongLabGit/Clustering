@@ -2,9 +2,10 @@
 %
 %  USAGE
 %
-%    data = LoadBinary(filename,<options>)
+%    data = LoadBinary(filename,format,<options>)
 %
 %    filename       file to read
+%    format         'mV','double',or 'int16'
 %    <options>      optional list of property-value pairs (see table below)
 %
 %    =========================================================================
@@ -20,14 +21,14 @@
 %                   (default = 0)
 %    =========================================================================
 
-% Copyright (C) 2004-2006 by Michaël Zugaro
+% Copyright (C) 2004-2006 by Michaël Zugaro, editted by vigi
 %
 % This program is free software; you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
 % the Free Software Foundation; either version 2 of the License, or
 % (at your option) any later version.
 
-function data = LoadBinary(filename,format,varargin)
+function data = LoadBinaryV(filename,format,varargin)
 
 % Default values
 start = 0;
@@ -175,7 +176,7 @@ else
 	end
 	
 	if ~isempty(channels)
-		data = data(:,channels);
+		data = data(channels,:);
 	end
 end
 if strcmp(format,'mV')
